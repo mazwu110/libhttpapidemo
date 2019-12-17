@@ -8,9 +8,12 @@ import com.httpapi.apiservice.HttpCode;
 import com.httpapi.apiservice.OnHttpApiListener;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -18,9 +21,11 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import retrofit2.http.HeaderMap;
 
 /**
  * author mzw  2019-06-29
@@ -116,8 +121,7 @@ public class QHttpApi {
                 });
     }
 
-    // 统一解析数据
-    private static <T> void parseDataApi(int what, BaseResultEntity data, Class<T> clazz, OnHttpApiListener listener) {
+    private static void parseDataApi(int what, BaseResultEntity data, Class<?> clazz, OnHttpApiListener listener) {
         if (data.getData() == null || data.getData().equals("") || data.getData().equals("null")) {
             listener.onSuccess(what, data.getData()); //返回空由前端自己判断是成功还是失败，这里默认返回在成功接口里
             return;
@@ -132,20 +136,15 @@ public class QHttpApi {
             return;
         }
 
-        // data是纯数组，即没有字段头的数组比如 data:[]
+        // 纯JSON数组的,比如data:[],调用处传递的参数格式必须clazz是MyClassName[].class,否则不能解析
+        // 接收处直接 List<MyClassName> list = (List<MyClassName>)data; 即可接收到后台传回的Data数据
         if (data.getData() instanceof ArrayList) {
-            List<JsonObject> jsonObjects = gson.fromJson(json, new TypeToken<List<JsonObject>>() {
-            }.getType());
-            List<T> list = new ArrayList<>();
-            for (JsonObject jsonObject : jsonObjects) {
-                list.add(gson.fromJson(jsonObject, clazz));
-            }
-
-            listener.onSuccess(what, list);// 取数据处 List<T> mylist = (List<T>)data; 即可取到列表中的数据
+            listener.onSuccess(what, Arrays.asList(gson.fromJson(json, (Type)clazz)));
             return;
         }
 
-        // data是有字段头和非数组的
+        // 非纯JSON数组的,比如data:{"list":[], "userName":"123"},调用处传递的参数格式必须clazz是MyClassName.class,否则不能解析,
+        // 接收处直接 MyClassName bean = (MyClassName)data; 即可; 即可接收到后台传回的Data数据
         BaseResultEntity result = gson.fromJson(json, (Type) clazz);
         listener.onSuccess(what, result);
     }
@@ -205,6 +204,61 @@ public class QHttpApi {
                 }
             }
         });
+    }
+
+    // 单文件上传
+    public static void uploadFile(String url, @HeaderMap Map<String, String> headers, File files, String key,
+                                  final Class<?> clazz, final int what, final OnHttpApiListener listener) {
+        RequestBody fileBody = RequestBody.create(MediaType.parse("multipart/form-data"), files);
+        MultipartBody.Part part = MultipartBody.Part.createFormData(key, files.getName(), fileBody);
+
+        HttpHelper.api().create(HttpApiService.class)
+                .uploadFile(url, part)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new RxSubscriber<BaseResultEntity>() {
+                    @Override
+                    public void onSuccess(BaseResultEntity data) {
+                        if (listener != null)
+                            parseDataApi(what, data, clazz, listener);
+                    }
+
+                    @Override
+                    public void onFailure(String msg, int code) {
+                        if (listener != null)
+                            listener.onFailure(what, msg, code);
+                    }
+                });
+    }
+
+    // 多文件上传
+    public static void uploadFiles(String url, @HeaderMap Map<String, String> headers, List<File> files, String key,
+                                   final Class<?> clazz, final int what, final OnHttpApiListener listener) {
+        List<MultipartBody.Part> partList = new ArrayList();
+
+        for (int i = 0; i < files.size(); i++) {
+            RequestBody fileBody = RequestBody.create(MediaType.parse("multipart/form-data"), files.get(i));
+            MultipartBody.Part part = MultipartBody.Part.createFormData(key, files.get(i).getName(), fileBody);
+            partList.add(part);
+        }
+
+        HttpHelper.api().create(HttpApiService.class)
+                .uploadFiles(url, partList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new RxSubscriber<BaseResultEntity>() {
+                    @Override
+                    public void onSuccess(BaseResultEntity data) {
+                        if (listener != null)
+                            parseDataApi(what, data, clazz, listener);
+                    }
+
+                    @Override
+                    public void onFailure(String msg, int code) {
+                        if (listener != null)
+                            listener.onFailure(what, msg, code);
+                    }
+                });
     }
 
     private static String appendParams(String url, Map<String, Object> params) {
