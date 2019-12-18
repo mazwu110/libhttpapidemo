@@ -4,6 +4,57 @@
 
 
 特别说明：调用处必须要明确后台返回的data是JSON还是JSON数组；
-1. 如果后台返回的data是非数组JSON，比如： data: {"userType":"1", list:[]},则参数class必须传MyClassName.class,然后在接收处用对象这样接收数据即可：MyClassName bean = (MyClassName) data;即可接收到后台返回的Data数据
+1. 如果后台返回的data是非数组JSON，比如： data: {"userType":"1", list:[]},则参数class必须传MyClassName.class,然后在接收处用对象这样接收数据即可：MyClassName bean = (MyClassName) data;即可接收到后台返回的Data数据       
 2. 如果后台返回的data是纯JSON数组,比如: data:[{"id":"1","name":"小李飞刀"}],则参数class必须传MyClassName[].class,然后在接收处用 List<MyClassName> list = (List<MyClassName>) data;即可接收到后台返回的JSON数组数据
-3.数据接收处 demo中有样例，可以参考。使用过程中有问题QQ或邮箱交流,QQ：315145320
+  
+3.使用案例
+public class MainActivity extends AppCompatActivity implements OnHttpApiListener {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+       // 1.1 非数组JSON使用样例：
+        Map<String, Object> params = new HashMap<>();
+        params.put("city", "北京");
+        params.put("key", "0132423b3e085efed24b7b8f00d83a91");
+        // 第三个参数，需要用到哪个类解析数据结果就传哪个类进去就行，这里采用了泛型解析
+        QHttpApi.doGet(Constants.getWeather, params, MyClassName.class, HttpWhatConfig.CODE_10, MainActivity.this);
+        
+        //2.1 纯数组JSON使用样例：
+        Map<String, Object> params = new HashMap<>();
+        params.put("city", "北京");
+        params.put("key", "0132423b3e085efed24b7b8f00d83a91");
+        // 第三个参数，需要用到哪个类解析数据结果就传哪个类进去就行，这里采用了泛型解析
+        QHttpApi.doGet(Constants.getWeather, params, MyClassName[].class, HttpWhatConfig.CODE_11, MainActivity.this);
+    }
+    
+    @Override
+    public void onSuccess(int what, Object data) {
+        switch (what) {
+            case HttpWhatConfig.CODE_10: {
+                // 使用请求数据的时候的class反解析就行
+                MyClassName bean = (MyClassName) data;
+                // 泛型数据解析出来了,后台返回的data数据就在bean中，想怎么用，自己写逻辑
+                break;
+            }
+            case HttpWhatConfig.CODE_11:
+                // 使用请求数据的时候的class反解析就行
+                List<MyClassName> list = (List<MyClassName>) data;
+                // 泛型数据解析出来了,后台返回的data数据就在list中，想怎么用，自己写逻辑
+                break;
+        }
+    }
+
+    @Override
+    public void onFailure(int what, String msg, int code) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+}
+
+public class MyClassName {
+    private String id;
+    private String name;
+    // get,set.....
+}
