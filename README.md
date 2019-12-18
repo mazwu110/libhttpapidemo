@@ -53,11 +53,11 @@ public class MainActivity extends AppCompatActivity implements OnHttpApiListener
     }
     
     public class MyClassName {
-    private String id; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
-    private String name; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
-    private String[] strArr; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
-    private List<InnerData> workDayList;
-    // get,set...
+        private String id; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
+        private String name; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
+        private String[] strArr; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
+        private List<InnerData> workDayList;
+        // get,set...
     }
   
     public class InnerData {
