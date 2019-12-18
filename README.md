@@ -15,7 +15,11 @@
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-       // 1.1 非数组JSON使用样例：
+        sendHttpRequest();
+    }
+    
+    private void sendHttpRequest() {
+    // 1.1 非数组JSON使用样例：
         Map<String, Object> params = new HashMap<>();
         params.put("city", "北京");
         params.put("key", "0132423b3e085efed24b7b8f00d83a91");
@@ -29,7 +33,7 @@
         // 第三个参数，需要用到哪个类解析数据结果就传哪个类进去就行，这里采用了泛型解析
         QHttpApi.doGet(Constants.getWeather, params, MyClassNameArr[].class, HttpWhatConfig.CODE_11, MainActivity.this);
     }
-    
+        
     @Override
     public void onSuccess(int what, Object data) {
         switch (what) {
