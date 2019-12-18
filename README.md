@@ -57,7 +57,7 @@
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
     
-    // 后台返回的data是非JSON数组的,比如 data: {"id":"1", "name":"老马","strArr":["123","234","345"],"workDayList":[{"id":"22","name":"随风起舞","workTime":"2019-12-18"}]}
+    // 后台返回的data是非JSON数组的,比如 data: {"id":"1", "name":"随风起舞","strArr":["123","234","345"],"workDayList":[{"id":"22","name":"随风起舞","workTime":"2019-12-18"}]}
     public class MyClassName {
         private String id; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
         private String name; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
@@ -66,7 +66,7 @@
         // get,set...
     }
     
-    // 后台返回的data是纯数组的,比如 data: ["id":"1", "name":"老马","strArr":["123","234","345"],"workDayList":[{"id":"22","name":"随风起舞","workTime":"2019-12-18"}]]
+    // 后台返回的data是纯数组的,比如 data: ["id":"1", "name":"随风起舞","strArr":["123","234","345"],"workDayList":[{"id":"22","name":"随风起舞","workTime":"2019-12-18"}]]
     public class MyClassNameArr {
         private String id; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
         private String name; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
