@@ -27,7 +27,7 @@
         params.put("city", "北京");
         params.put("key", "0132423b3e085efed24b7b8f00d83a91");
         // 第三个参数，需要用到哪个类解析数据结果就传哪个类进去就行，这里采用了泛型解析
-        QHttpApi.doGet(Constants.getWeather, params, MyClassName[].class, HttpWhatConfig.CODE_11, MainActivity.this);
+        QHttpApi.doGet(Constants.getWeather, params, MyClassNameArr[].class, HttpWhatConfig.CODE_11, MainActivity.this);
     }
     
     @Override
@@ -52,7 +52,17 @@
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
     
+    // 后台返回的data是非JSON数组的,比如 data: {"id":"1", "name":"老马","strArr":["123","234","345"],"workDayList":[{"id":"22","name":"随风起舞","workTime":"2019-12-18"}]}
     public class MyClassName {
+        private String id; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
+        private String name; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
+        private String[] strArr; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
+        private List<InnerData> workDayList;
+        // get,set...
+    }
+    
+    // 后台返回的data是纯数组的,比如 data: ["id":"1", "name":"老马","strArr":["123","234","345"],"workDayList":[{"id":"22","name":"随风起舞","workTime":"2019-12-18"}]]
+    public class MyClassNameArr {
         private String id; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
         private String name; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
         private String[] strArr; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
