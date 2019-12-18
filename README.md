@@ -6,8 +6,9 @@
 特别说明：调用处必须要明确后台返回的data是JSON还是JSON数组；
 1. 如果后台返回的data是非数组JSON，比如： data: {"userType":"1", list:[]},则参数class必须传MyClassName.class,然后在接收处用对象这样接收数据即可：MyClassName bean = (MyClassName) data;即可接收到后台返回的Data数据       
 2. 如果后台返回的data是纯JSON数组,比如: data:[{"id":"1","name":"随风起舞"}],则参数class必须传MyClassName[].class,然后在接收处用 List<MyClassName> list = (List<MyClassName>) data;即可接收到后台返回的JSON数组数据
+3. 文件下载辅助类DownLoadHelper，DownLoadHelper是一个文件下载的辅助工具类，传文件存储路径和文件下载地址进去即可，有下载进度通知，报错通知等
   
-3.使用案例
+4.使用案例
     
     public class MainActivity extends AppCompatActivity implements OnHttpApiListener {
     @Override
