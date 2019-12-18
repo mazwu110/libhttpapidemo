@@ -9,7 +9,7 @@
   
 3.使用案例
     
-public class MainActivity extends AppCompatActivity implements OnHttpApiListener {
+    public class MainActivity extends AppCompatActivity implements OnHttpApiListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
