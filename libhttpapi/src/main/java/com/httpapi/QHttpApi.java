@@ -291,4 +291,15 @@ public class QHttpApi {
 
         return obj;
     }
+
+    // 断点下载文件，不需要断点下载的， startsPoint传0 即可
+    public static void downLoadFile(final String url, final long startsPoint, final okhttp3.Callback callback) {
+        Request request = new Request.Builder()
+                .url(url)
+                .header("RANGE", "bytes=" + startsPoint + "-")//断点续传
+                .build();
+
+        Call downCall = HttpHelper.api().getOkHttpClient().newCall(request);
+        downCall.enqueue(callback);
+    }
 }
