@@ -8,8 +8,8 @@
 2. 如果后台返回的data是纯JSON数组,比如: data:[{"id":"1","name":"小李飞刀"}],则参数class必须传MyClassName[].class,然后在接收处用 List<MyClassName> list = (List<MyClassName>) data;即可接收到后台返回的JSON数组数据
   
 3.使用案例
+    
 public class MainActivity extends AppCompatActivity implements OnHttpApiListener {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,19 +51,20 @@ public class MainActivity extends AppCompatActivity implements OnHttpApiListener
     public void onFailure(int what, String msg, int code) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
+    
+    public class MyClassName {
+    private String id; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
+    private String name; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
+    private String[] strArr; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
+    private List<InnerData> workDayList;
+    // get,set...
+    }
+  
+    public class InnerData {
+        private String id;
+        private String name;
+        private String workTime;
+        // get, set ...
+    }
 }
 
-public class MyClassName {
-private String id; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
-private String name; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
-private String[] strArr; // 字段名和类型必须要和后台返回的一模一样，否则GSON解析对应不上
-private List<InnerData> workDayList;
-// get,set...
-}
-  
-public class InnerData {
-    private String id;
-    private String name;
-    private String workTime;
-    // get, set ...
-}
