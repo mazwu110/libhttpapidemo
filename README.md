@@ -5,7 +5,7 @@
 
 特别说明：调用处必须要明确后台返回的data是JSON还是JSON数组；
 1. 如果后台返回的data是非数组JSON，比如： data: {"userType":"1", list:[]},则参数class必须传MyClassName.class,然后在接收处用对象这样接收数据即可：MyClassName bean = (MyClassName) data;即可接收到后台返回的Data数据       
-2. 如果后台返回的data是纯JSON数组,比如: data:[{"id":"1","name":"小李飞刀"}],则参数class必须传MyClassName[].class,然后在接收处用 List<MyClassName> list = (List<MyClassName>) data;即可接收到后台返回的JSON数组数据
+2. 如果后台返回的data是纯JSON数组,比如: data:[{"id":"1","name":"随风起舞"}],则参数class必须传MyClassName[].class,然后在接收处用 List<MyClassName> list = (List<MyClassName>) data;即可接收到后台返回的JSON数组数据
   
 3.使用案例
     
