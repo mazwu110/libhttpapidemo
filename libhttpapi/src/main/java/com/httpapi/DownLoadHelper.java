@@ -16,9 +16,8 @@ import okhttp3.Response;
 
 // 文件下载辅助类
 public class DownLoadHelper {
-    // 下载ZIP文件，并核对文件MD5值
-    // savePath 存储路径,zip文件路径， url 下载地址
-    // 断点下载的时候用，fileSize是之前已经下载过的文件总的大小，这个需要客户端保存，也可以在下载前重新请求文件总大小，但是麻烦不可取，最好第一次下的
+    // savePath 存储路径,url 下载地址
+    // 断点下载的时候用，fileSize是之前已经下载过的那个文件在服务器上的总的大小，这个需要客户端保存，也可以在下载前重新请求文件总大小，但是麻烦不可取，最好第一次下的
     // 时候就保存文件总大小，如果不需要断点下载，此参数可以去掉，再修改下内部逻辑即可
     public static void downLoadFile(String url, final String savePath, final long fileSize, final int what, final OnDownModelListener listener) {
         final File file = new File(savePath);
